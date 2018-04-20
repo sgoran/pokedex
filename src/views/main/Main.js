@@ -8,11 +8,11 @@ import MyPokemon from "../myPokemon/MyPokemon";
 class Main extends Component {
     render() {
         return (
-            <div>
+            <div style={{maxWidth: '960px', margin: '0 auto'}}>
                 <Switch>
                     <Route exact path='/' component={PokemonSearch} />
-                    <Route path='/pokemon/:id' component={Pokemon} />
                     <Route path='/my-pokemon' component={MyPokemon} />
+                    <Route path='/pokemon/:id' component={Pokemon} />
                 </Switch>
             </div>
         );

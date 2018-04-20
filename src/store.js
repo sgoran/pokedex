@@ -1,5 +1,24 @@
-import { createStore } from 'redux'
-import reducers from './reducers'
+import { 
+    createStore, 
+    applyMiddleware  
+} from 'redux';
 
-// drugi argumenta moze biti initial satte
-const store = createStore(reducers);
+import thunkMiddleware from 'redux-thunk';
+
+import { 
+    createLogger 
+} from 'redux-logger';
+
+import reducers from './reducers';
+
+const loggerMiddleware = createLogger();
+
+const store = createStore(
+    reducers,
+    applyMiddleware(
+        thunkMiddleware,
+        loggerMiddleware 
+    )
+);
+
+export default store;

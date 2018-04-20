@@ -1,72 +1,95 @@
 import { combineReducers } from 'redux';
 
+import {
+    GET_POKEMONS,
+    GET_MY_POKEMONS,
+    GET_ONE_POKEMON,
+    REQUEST_DATA,
+    RECEIVE_DATA
+} from '../actions';
+
+
 var initialState = {
-    pokemons : [{
-        name: 'Pokemon XXX'
-    }]
+    pokemons: {
+        isFetching: false,
+        isLoaded: false,
+        receivedAt: '',
+        results: []
+    },
+    myPokemons: {
+        items: []
+    },
+    pokemon: []
 };
 
-function pokemons(state = initialState, action) {
+function pokemons(state = initialState.pokemons, action) {
 
-    // switch (action.type) {
+    switch (action.type) {
 
-    //     case 'login':
 
-    //         var state = Object.assign({}, state, {
-    //             loggedIn: action.loggedIn
-    //         });
+        case REQUEST_DATA:
 
-    //         return state;
+            return {
+                ...state,
+                isFetching: true,
+                isLoaded: false
+            }
 
-    //     default:
-    //         return state
+        case RECEIVE_DATA:
 
-    // }
+            return Object.assign({}, state, {
+                ...action.data,
+                isFetching: false,
+                isLoaded: true,
+                
+                receivedAt: action.receivedAt
+            })
 
-    return state;
+        default:
 
-}
+            return state
 
-function myPokemons(state = initialState, action) {
-
-    // switch (action.type) {
-
-    //     case 'login':
-
-    //         var state = Object.assign({}, state, {
-    //             loggedIn: action.loggedIn
-    //         });
-
-    //         return state;
-
-    //     default:
-    //         return state
-
-    // }
-
-    return state;
+    }
 
 }
 
+function myPokemons(state = initialState.myPokemons, action) {
 
-function pokemon(state = initialState, action) {
+    switch (action.type) {
 
-    // switch (action.type) {
+        case GET_MY_POKEMONS:
 
-    //     case 'login':
+            if (action.data.length > 0)
 
-    //         var state = Object.assign({}, state, {
-    //             loggedIn: action.loggedIn
-    //         });
+                state = Object.assign({}, state, {
+                    items: action.data
+                });
 
-    //         return state;
+            return state
 
-    //     default:
-    //         return state
+        default:
 
-    // }
+            return state
 
-    return state;
+    }
+
+}
+
+
+function pokemon(state = initialState.pokemon, action) {
+
+    switch (action.type) {
+
+        case GET_ONE_POKEMON:
+
+            if (action.data)
+                return action.data
+
+        default:
+
+            return state
+
+    }
 
 }
 
