@@ -4,8 +4,10 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import StarIcon from '@material-ui/icons/Star';
 import SwipeableDrawer from 'material-ui/SwipeableDrawer';
 import List from 'material-ui/List';
+import { Link } from 'react-router-dom';
 import { NavList } from './Nav';
 
 const classes = {
@@ -50,11 +52,22 @@ class Header extends Component {
                         <MenuIcon />
                     </IconButton>
                     
-                    <Typography variant="title" color="inherit" >
+                    <Typography variant="title" color="inherit" style={{flex: 1}} >
                         Pokedex
                     </Typography>
+                    
+                    <div>
+                        <IconButton 
+                            component={props => <Link to={"/my-pokemon"} {...props} />}
+                        >
+                            <StarIcon className="gold" />
+                        </IconButton>
+                    </div>
+                
 
-                    <SwipeableDrawer
+                </Toolbar>
+
+                <SwipeableDrawer
                         open={this.state.navOpen}
                         onClose={this.toggleDrawer(false)}
                         onOpen={this.toggleDrawer(true)} >
@@ -72,8 +85,6 @@ class Header extends Component {
                         </div>
 
                     </SwipeableDrawer>
-
-                </Toolbar>
 
             </AppBar>
         );

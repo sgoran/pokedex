@@ -17,7 +17,7 @@ export const NavList = (
         </ListItem>
 
 
-        <ListItem component={props => <Link to="my-pokemon" {...props} />} button>
+        <ListItem component={props => <Link to="/my-pokemon" {...props} />} button>
             <ListItemIcon>
                 <StarIcon />
             </ListItemIcon>

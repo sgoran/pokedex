@@ -1,9 +1,13 @@
 import { combineReducers } from 'redux';
 
 import {
-    GET_POKEMONS,
+    GET_FILTERED_POKEMONS,
+
     GET_MY_POKEMONS,
+    ADD_TO_MY_POKEMONS,
+
     GET_ONE_POKEMON,
+
     REQUEST_DATA,
     RECEIVE_DATA
 } from '../actions';
@@ -14,18 +18,55 @@ var initialState = {
         isFetching: false,
         isLoaded: false,
         receivedAt: '',
+        filter: {type: 'search', data: ''},
         results: []
     },
     myPokemons: {
         items: []
     },
-    pokemon: []
+    pokemon: {
+        items: []
+    }
 };
+
+
+function pokemon(state = initialState.pokemon, action) {
+
+    switch (action.type) {
+
+        case GET_ONE_POKEMON:
+        
+            const stateClone =  Object.assign({}, state);
+            console.log(stateClone)
+            stateClone.items.push(action.data);
+            return stateClone;
+            
+
+        default:
+
+            return state
+
+    }
+
+}
 
 function pokemons(state = initialState.pokemons, action) {
 
     switch (action.type) {
 
+        case GET_FILTERED_POKEMONS:
+
+            return {
+                ...state,
+                filter: {type: 'search', data: action.data}
+            }
+
+        case GET_MY_POKEMONS:
+
+            return {
+                ...state,
+                filter: {type: 'my'}
+            }
 
         case REQUEST_DATA:
 
@@ -41,31 +82,21 @@ function pokemons(state = initialState.pokemons, action) {
                 ...action.data,
                 isFetching: false,
                 isLoaded: true,
-                
+
                 receivedAt: action.receivedAt
             })
 
-        default:
+        case ADD_TO_MY_POKEMONS:
 
-            return state
+            const newState = Object.assign({}, state);
 
-    }
+            newState.results.forEach(function (pokemon) {
+                if (pokemon.id == action.data) 
+                    pokemon.favorit = !pokemon.favorit;
+                
+            });
 
-}
-
-function myPokemons(state = initialState.myPokemons, action) {
-
-    switch (action.type) {
-
-        case GET_MY_POKEMONS:
-
-            if (action.data.length > 0)
-
-                state = Object.assign({}, state, {
-                    items: action.data
-                });
-
-            return state
+            return newState
 
         default:
 
@@ -75,26 +106,8 @@ function myPokemons(state = initialState.myPokemons, action) {
 
 }
 
-
-function pokemon(state = initialState.pokemon, action) {
-
-    switch (action.type) {
-
-        case GET_ONE_POKEMON:
-
-            if (action.data)
-                return action.data
-
-        default:
-
-            return state
-
-    }
-
-}
 
 export default combineReducers({
     pokemons,
-    myPokemons,
     pokemon
 });

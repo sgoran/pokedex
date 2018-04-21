@@ -1,86 +1,105 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getPokemons } from '../../actions';
+import {
+    getPokemons,
+    setPokemonFilter,
+    addToMyPokemons
+} from '../../actions';
 
 import Search from '../custom/search/Search';
 import CardList from '../custom/list/cardList';
-import { CircularProgress } from 'material-ui/Progress';
-import purple from 'material-ui/colors/purple';
+import Loader from '../custom/loader/Loader';
+import Divider from 'material-ui/Divider';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 
 class PokemonSearch extends Component {
-
-    constructor(props) {
-        super(props);
-
-    }
 
     componentDidMount() {
         this.props.dispatch(getPokemons());
     }
 
-    handleTypeChange = e => {
-        this.props.dispatch(getPokemons(e.target.value))
+    handleSearch = value => {
+        this.props.dispatch(setPokemonFilter('search', value))
     }
 
-    cardList() {
+    onItemStarClick = pokemonId => {
+        this.props.dispatch(addToMyPokemons(pokemonId));
+    }
 
-        const isEmpty = (this.props.store.pokemons.results.length === 0);
-        const isFetching = (this.props.store.pokemons.isFetching);
+    pokemonList() {
 
-        if (isEmpty && isFetching) {
+        const isEmpty = (this.props.pokemons.results.length === 0);
+        const isFetching = (this.props.pokemons.isFetching);
 
-            return <CircularProgress
-                style={{
-                    color: purple[500],
-                    margin: '20 auto'
-                }}
-                thickness={7}
-            />
+        return (isEmpty && isFetching)  ? <Loader /> : <CardList 
+                                                            list={this.props.pokemonsList} 
+                                                            onItemStarClick={this.onItemStarClick} />
 
-        } else {
+    }
 
-            return <CardList
-                list={this.props.store.pokemons.results}
-            />
-        }
+    myPokemonDetails(){
+        const count = this.props.pokemonsList.length;
+        return (
+            <div>   
+                <Paper elevation={4}>
+                    <Typography variant="headline" component="h4" style={{padding: '15px', marginBottom: '10px'}}>
+                        You have {count} pokemon{count !== 1 ? 's' : ''} in your List!
+                    </Typography>
+                </Paper>
+                <Divider />
+            </div>
+        );
     }
 
     render() {
 
-        const cardList = this.cardList()
-
         return (
-            <div style={{
-                padding: 10,
-                textAlign: 'center'
-            }}>
-                <Search
-                    onChange={this.handleTypeChange}
-                />
-                {cardList}
+            <div className="pokemon-list">
+
+                {!this.props.filter ? <Search onDelayedChange={this.handleSearch} /> : this.myPokemonDetails()}
+
+                {this.pokemonList()}
 
             </div>
         );
     }
 }
 
+function filterPokemonsList(pokemons, filter) {
 
-function mapStateToProps(state) {
+    switch (filter.type) {
+
+        case 'search':
+
+            if (filter.data.length > 0)
+                return pokemons.filter(pokemon => pokemon.name.toLowerCase().indexOf(filter.data.toLowerCase()) > -1)
+            else
+                return pokemons;
+
+        case 'my':
+        
+            var data =  pokemons.filter(pokemon => pokemon.favorit === true);
+            
+            return data;
+
+        default:
+
+            return pokemons;
+    }
+
+
+}
+
+function mapStateToProps(state, ownProps) {
+
+    const activeFilter = (ownProps && ownProps.filter ? ownProps.filter : state.pokemons.filter);
+    
     return {
-        store: state
+        pokemons: state.pokemons,
+        pokemonsList: filterPokemonsList(state.pokemons.results, activeFilter),
     }
 }
 
-// function mapDispatchToProps(dispatch){
-// 	  return {
-//         handleTypeChange: e => {
-//             dispatch(getPokemons(e.target.value))
-//         },
-
-//     }
-// }
 
 export default connect(mapStateToProps)(PokemonSearch);
-
-
-// /export default connect(mapStateToProps, mapDispatchToProps)(PokemonSearch);

@@ -3,3 +3,28 @@ body {
     padding: 0;
     font-family: sans-serif;
 }
+.disabled{
+    pointer-events: none;
+    opacity: 0.4;
+}
+.gold{
+    fill: gold !important;
+}
+
+.loader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.pokemon-list{
+    padding: 10px;
+    text-align: 'center';
+}
+
+.custom-avatar{
+    height: 100px !important;
+    width: 100px  !important;
+    margin: 0 auto;
+    background: #ececec;
+}
