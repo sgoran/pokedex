@@ -22,6 +22,10 @@ class PokemonSearch extends Component {
         
         me.props.dispatch(getPokemons());
         
+        /**
+         * This will load more pokemons when user scrolls to the bottom
+         * Next page is in state 
+         */
         window.onscroll = function(ev) {
             if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight){
                 if(!me.props.pokemons.isFetching && me.cmpMounted)
@@ -34,6 +38,10 @@ class PokemonSearch extends Component {
     componentWillUnmount(){  
         this.cmpMounted = false;
     }
+
+    /**
+     * Dispatch filter after delayed serach or on Enter
+     */
     handleSearch = value => {
         this.props.dispatch(setPokemonFilter('search', value))
     }
@@ -48,7 +56,7 @@ class PokemonSearch extends Component {
         const isFetching = (this.props.pokemons.isFetching);
 
         return (isEmpty && isFetching)  ? <Loader /> : <CardList 
-                                                            loaderDisabled={this.props.myPokemonsActive}
+                                                            disableLoader={this.props.disableLoader}
                                                             list={this.props.pokemonsList} 
                                                             onItemStarClick={this.onItemStarClick} />
 
@@ -82,6 +90,13 @@ class PokemonSearch extends Component {
     }
 }
 
+/**
+ * Filter for plain list or My Pokemons 
+ * My Pokemons filter is forwarded via react router
+ * 
+ * @param {*} pokemons 
+ * @param {*} filter 
+ */
 function filterPokemonsList(pokemons, filter) {
 
     switch (filter.type) {
@@ -114,7 +129,7 @@ function mapStateToProps(state, ownProps) {
     return {
         pokemons: state.pokemons,
         pokemonsList: filterPokemonsList(state.pokemons.results, activeFilter),
-        myPokemonsActive: (ownProps && ownProps.filter ? true : false)
+        disableLoader: ((ownProps && ownProps.filter)  || (state.pokemons.filter.data !=='')? true : false)
     }
 }
 

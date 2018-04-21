@@ -94,7 +94,7 @@ class cardList extends Component {
                     })}
 
                 </Grid>
-                {!this.props.loaderDisabled &&
+                {!this.props.disableLoader &&
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',

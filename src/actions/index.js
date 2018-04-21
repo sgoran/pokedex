@@ -118,7 +118,13 @@ export function receiveData(json) {
  * helpers
  */
 
-const formatPokemonList = function (json) {
+
+ /**
+  * Adds id and sprite for loaded record from existing data
+  * so we don't load details and make heavy requests
+  */
+
+  const formatPokemonList = function (json) {
 
     json.results.forEach(function (pokemon) {
         pokemon.id = pokemon.url.replace('https://pokeapi.co/api/v2/pokemon/', '').replace('/', '');
@@ -129,6 +135,11 @@ const formatPokemonList = function (json) {
 
 }
 
+/**
+ * If pokemon is in memory will not fetch it
+ * @param {*} state 
+ * @param {*} pokemonId 
+ */
 const pokemonInCache = function (state, pokemonId) {
 
     return state.pokemon.items.filter(pokemon => pokemon.id == pokemonId).length>0;

@@ -2,12 +2,9 @@ import { combineReducers } from 'redux';
 
 import {
     GET_FILTERED_POKEMONS,
-
     GET_MY_POKEMONS,
     ADD_TO_MY_POKEMONS,
-
     GET_ONE_POKEMON,
-
     REQUEST_DATA,
     RECEIVE_DATA
 } from '../actions';
@@ -17,6 +14,8 @@ var initialState = {
     pokemons: {
         isFetching: false,
         isLoaded: false,
+
+        // this propert is for endles loading, it will be updated with each new request
         next: 'https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0', 
         receivedAt: '',
         filter: {type: 'search', data: ''},
