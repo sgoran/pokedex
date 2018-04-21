@@ -27,7 +27,7 @@ class PokemonSearch extends Component {
          * Next page is in state 
          */
         window.onscroll = function(ev) {
-            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight){
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight-5){
                 if(!me.props.pokemons.isFetching && window.location.hash == '#/')
                     me.props.dispatch(getMorePokemons());
             }
