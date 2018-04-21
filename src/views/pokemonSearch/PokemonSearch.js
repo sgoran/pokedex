@@ -17,7 +17,7 @@ import Typography from 'material-ui/Typography';
 class PokemonSearch extends Component {
 
     componentDidMount() {
-
+        
         var me = this;
         
         me.props.dispatch(getPokemons());
@@ -28,7 +28,7 @@ class PokemonSearch extends Component {
          */
         window.onscroll = function(ev) {
             if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight){
-                if(!me.props.pokemons.isFetching && me.cmpMounted)
+                if(!me.props.pokemons.isFetching && window.location.hash == '#/')
                     me.props.dispatch(getMorePokemons());
             }
         };
