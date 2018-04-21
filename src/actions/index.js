@@ -11,12 +11,13 @@ export const GET_ONE_POKEMON = 'GET_ONE_POKEMON'
 export const REQUEST_DATA = 'REQUEST_DATA'
 export const RECEIVE_DATA = 'RECEIVE_DATA'
 
+
 /*
  * action creators
  */
 
 export function getPokemons(query) {
-
+    console.log('getPokemons')
     return function (dispatch, getState) {
 
         const state = getState();
@@ -25,11 +26,27 @@ export function getPokemons(query) {
 
             dispatch(requestData(query))
 
-            return fetch(`https://pokeapi.co/api/v2/pokemon/?limit=10&offset=0`)
+            return fetch(state.pokemons.next)
                 .then(response => response.json())
                 .then(json => dispatch(receiveData(json)));
 
         }
+    }
+
+}
+
+export function getMorePokemons(query) {
+    console.log('getMorePokemons')
+    return function (dispatch, getState) {
+
+        const state = getState();
+
+            dispatch(requestData(query))
+
+            return fetch(state.pokemons.next)
+                .then(response => response.json())
+                .then(json => dispatch(receiveData(json)));
+
     }
 
 }

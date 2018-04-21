@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
     getPokemons,
+    getMorePokemons,
     setPokemonFilter,
     addToMyPokemons
 } from '../../actions';
@@ -16,9 +17,23 @@ import Typography from 'material-ui/Typography';
 class PokemonSearch extends Component {
 
     componentDidMount() {
-        this.props.dispatch(getPokemons());
-    }
 
+        var me = this;
+        
+        me.props.dispatch(getPokemons());
+        
+        window.onscroll = function(ev) {
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight){
+                if(!me.props.pokemons.isFetching && me.cmpMounted)
+                    me.props.dispatch(getMorePokemons());
+            }
+        };
+
+        me.cmpMounted = true;
+    }
+    componentWillUnmount(){  
+        this.cmpMounted = false;
+    }
     handleSearch = value => {
         this.props.dispatch(setPokemonFilter('search', value))
     }
@@ -33,6 +48,7 @@ class PokemonSearch extends Component {
         const isFetching = (this.props.pokemons.isFetching);
 
         return (isEmpty && isFetching)  ? <Loader /> : <CardList 
+                                                            loaderDisabled={this.props.myPokemonsActive}
                                                             list={this.props.pokemonsList} 
                                                             onItemStarClick={this.onItemStarClick} />
 
@@ -98,6 +114,7 @@ function mapStateToProps(state, ownProps) {
     return {
         pokemons: state.pokemons,
         pokemonsList: filterPokemonsList(state.pokemons.results, activeFilter),
+        myPokemonsActive: (ownProps && ownProps.filter ? true : false)
     }
 }
 

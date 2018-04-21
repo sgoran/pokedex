@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import StarIcon from '@material-ui/icons/Star';
 import Divider from 'material-ui/Divider';
 import { Link } from 'react-router-dom';
+import { CircularProgress } from 'material-ui/Progress';
+import purple from 'material-ui/colors/purple';
 
 const styles = theme => ({
     root: {
@@ -92,7 +94,22 @@ class cardList extends Component {
                     })}
 
                 </Grid>
-
+                {!this.props.loaderDisabled &&
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '50px'
+                    }}>
+                        <CircularProgress
+                            style={{
+                                color: purple[500],
+                                margin: '20 auto'
+                            }}
+                            thickness={7}
+                        />
+                    </div>    
+                }
             </div>
         );
     }

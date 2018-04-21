@@ -17,6 +17,7 @@ var initialState = {
     pokemons: {
         isFetching: false,
         isLoaded: false,
+        next: 'https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0', 
         receivedAt: '',
         filter: {type: 'search', data: ''},
         results: []
@@ -37,7 +38,6 @@ function pokemon(state = initialState.pokemon, action) {
         case GET_ONE_POKEMON:
         
             const stateClone =  Object.assign({}, state);
-            console.log(stateClone)
             stateClone.items.push(action.data);
             return stateClone;
             
@@ -77,14 +77,16 @@ function pokemons(state = initialState.pokemons, action) {
             }
 
         case RECEIVE_DATA:
-
+            
             return Object.assign({}, state, {
-                ...action.data,
+                next: action.data.next,
+                count: action.data.count,
                 isFetching: false,
                 isLoaded: true,
-
-                receivedAt: action.receivedAt
-            })
+                results: state.results.concat(action.data.results),
+                receivedAt: action.data.receivedAt
+            });
+            
 
         case ADD_TO_MY_POKEMONS:
 
