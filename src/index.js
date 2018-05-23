@@ -5,6 +5,7 @@ import App from './views/App';
 import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
+import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render((
         <Provider store={store}>
@@ -12,6 +13,7 @@ ReactDOM.render((
                 <App />
             </HashRouter> 
         </Provider>
-  ), document.getElementById('root'))
-
+  ), document.getElementById('root'));
+  
+registerServiceWorker();
   
